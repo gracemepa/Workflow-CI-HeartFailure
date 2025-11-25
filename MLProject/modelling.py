@@ -13,6 +13,14 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 # KONFIGURASI MLFLOW
 # ==========================================
 
+# MLflow tracking URI: gunakan environment variable jika ada, atau default ke local tracking
+mlflow_tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
+if mlflow_tracking_uri:
+    mlflow.set_tracking_uri(mlflow_tracking_uri)
+    print(f"MLflow tracking URI set dari environment variable: {mlflow_tracking_uri}")
+else:
+    print("MLflow tracking URI tidak ditetapkan. Menggunakan default local tracking (./mlruns)")
+
 mlflow.set_experiment("Heart_Disease_Prediction_Skilled")
 
 def load_data(data_dir="heart_preprocessing"):
