@@ -110,8 +110,23 @@ def main():
     
     # 3. Mulai Run MLflow
     # Penting: Jangan gunakan mlflow.autolog() untuk level Skilled/Advance [cite: 77]
-    with mlflow.start_run(run_name="Skilled_Manual_Tuning"):
-        
+    # 
+    # Catatan: Saat dijalankan via `mlflow run`, run context sudah dibuat oleh MLflow CLI.
+    # Jadi kita gunakan get_run() untuk memeriksa apakah sudah ada run aktif.
+    # Jika ada run aktif (dari mlflow run), gunakan itu. Jika tidak, mulai run baru.
+    
+    active_run = mlflow.active_run()
+    should_end_run = False
+    
+    if active_run is None:
+        # Tidak ada run aktif, jadi mulai run baru (standalone execution)
+        mlflow.start_run(run_name="Skilled_Manual_Tuning")
+        should_end_run = True
+    else:
+        # Ada run aktif dari mlflow run CLI, gunakan itu
+        print(f"Menggunakan run aktif dari MLflow: {active_run.info.run_id}")
+    
+    try:
         # Proses Grid Search
         grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, cv=3, scoring='accuracy', n_jobs=-1)
         grid_search.fit(X_train, y_train)
@@ -161,9 +176,10 @@ def main():
         mlflow.log_artifact(cm_filename)
         
         print("Logging selesai. Cek MLflow UI.")
-    
-    # Pastikan run ditutup dengan baik untuk menghindari conflict di CI
-    mlflow.end_run()
+    finally:
+        # Pastikan run ditutup dengan baik jika kita yang membuatnya
+        if should_end_run:
+            mlflow.end_run()
 
 if __name__ == "__main__":
     main()
