@@ -33,4 +33,4 @@ jobs:
     #Jalankan MLflow Project
     - name: Run MLflow Project
       run: |
-        mlflow run MLProject . --no-conda --env-manager=local
+        mlflow run MLProject --no-conda --env-manager=local
