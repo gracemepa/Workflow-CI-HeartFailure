@@ -161,6 +161,9 @@ def main():
         mlflow.log_artifact(cm_filename)
         
         print("Logging selesai. Cek MLflow UI.")
+    
+    # Pastikan run ditutup dengan baik untuk menghindari conflict di CI
+    mlflow.end_run()
 
 if __name__ == "__main__":
     main()
