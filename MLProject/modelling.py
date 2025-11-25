@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 # ==========================================
 # KONFIGURASI MLFLOW
 # ==========================================
-mlflow.set_tracking_uri("file:./mlruns")
+
 mlflow.set_experiment("Heart_Disease_Prediction_Skilled")
 
 def load_data(data_dir="heart_preprocessing"):
