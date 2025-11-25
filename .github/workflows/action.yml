@@ -1,0 +1,36 @@
+name: Continuous Integration Heart Failure
+
+# Workflow akan jalan setiap kali push ke branch main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    #Mengambil kode terbaru dari repository 
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Menyiapkan Python
+    - name: Set up Python 3.12.7
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12.7"
+
+    #Cek Environment
+    - name: Check Environment
+      run: python --version
+
+    #Install Dependencies dari conda.yaml atau pip manual
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mlflow==2.19.0 pandas numpy scikit-learn matplotlib seaborn
+
+    #Jalankan MLflow Project
+    - name: Run MLflow Project
+      run: |
+        mlflow run . --no-conda --env-manager=local
